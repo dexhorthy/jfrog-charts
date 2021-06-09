@@ -16,6 +16,8 @@ jobs:
     - name: Get branch name
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: get_branch
+    - name: Helm Package
+      run: make -C stable/jfrog-platform/kots helm-package
     - name: Create a release on Channel associated with the branch
       uses: docker://replicated/vendor-cli:latest
       with:
