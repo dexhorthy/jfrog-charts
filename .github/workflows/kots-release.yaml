@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'stable/jfrog-platform/**'
+    - '.github/workflows/kots-release.yaml'
 
 jobs:
   create-release:
