@@ -1,0 +1,14 @@
+apiVersion: kots.io/v1beta1
+kind: Application
+metadata:
+  name: app-slug
+spec:
+  title: JFrog
+  icon: https://support.jfrog.com/resource/1547111714000/BR_JFC_Resource/img/jfrog-logo.png
+  statusInformers:
+    - statefulset/artifactory
+  ports:
+    - serviceName: "artifactory"
+      servicePort: 8081
+      localPort: 8081
+      applicationUrl: "http://34.78.235.75:8081"

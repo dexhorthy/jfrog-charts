@@ -1,0 +1,17 @@
+apiVersion: kots.io/v1beta1
+kind: HelmChart
+metadata:
+  name: jfrog-platform
+spec:
+  helmVersion: v3
+  chart:
+    name: jfrog-platform
+    chartVersion: 0.4.1
+  values:
+    nginx:
+      service:
+        type: ClusterIP
+    artifactory:
+      admin:
+        username: '{{repl ConfigOption "admin_username"}}'
+        password: '{{repl ConfigOption "admin_password"}}'
