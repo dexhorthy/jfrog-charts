@@ -1,0 +1,25 @@
+apiVersion: kurl.sh/v1beta1
+kind: Installer
+metadata:
+  name: 'myapp'
+spec:
+  k3s:
+    version: v1.19.7+k3s1
+  registry:
+    version: 2.7.1
+  kotsadm:
+    version: 1.30.0
+    uiBindPort: 30880
+  minio:
+    version: latest
+  openebs:
+    version: latest
+    namespace: "openebs"
+    isLocalPVEnabled: true
+    localPVStorageClassName: default
+  contour:
+    version: latest
+  prometheus:
+    version: latest
+  ekco:
+    version: latest
