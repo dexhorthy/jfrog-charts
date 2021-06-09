@@ -12,8 +12,6 @@ spec:
     uiBindPort: 30880
   minio:
     version: latest
-  contour:
-    version: latest
   prometheus:
     version: latest
   ekco:
