@@ -12,11 +12,6 @@ spec:
     uiBindPort: 30880
   minio:
     version: latest
-  openebs:
-    version: latest
-    namespace: "openebs"
-    isLocalPVEnabled: true
-    localPVStorageClassName: default
   contour:
     version: latest
   prometheus:
