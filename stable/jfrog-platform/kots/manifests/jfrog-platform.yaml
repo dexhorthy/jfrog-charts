@@ -2,6 +2,8 @@ apiVersion: kots.io/v1beta1
 kind: HelmChart
 metadata:
   name: jfrog-platform
+  annotations:
+    kots.io/when: '{{repl eq (Distribution) "openshift" }}'
 spec:
   helmVersion: v3
   chart:

@@ -11,4 +11,4 @@ spec:
     - serviceName: "artifactory"
       servicePort: 8081
       localPort: 8081
-      applicationUrl: "http://34.78.235.75:8081"
+      applicationUrl: "http://jfrog:8080"
