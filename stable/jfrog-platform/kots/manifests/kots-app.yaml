@@ -6,7 +6,8 @@ spec:
   title: JFrog
   icon: https://support.jfrog.com/resource/1547111714000/BR_JFC_Resource/img/jfrog-logo.png
   statusInformers:
-    - statefulset/artifactory
+    - statefulset/jfrog-platform-redis-master
+    - deployment.apps/jfrog-platform-nginx
   ports:
     - serviceName: "artifactory"
       servicePort: 8081
