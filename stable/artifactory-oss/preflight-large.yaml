@@ -1,0 +1,32 @@
+apiVersion: troubleshoot.replicated.com/v1beta1
+kind: Preflight
+metadata:
+  name: sentry-enterprise
+spec:
+  analyzers:
+    - nodeResources:
+        checkName: Cluster Memory
+        outcomes:
+          - fail:
+              when: "sum(memoryAllocatable) < 6Gi"
+              message: A mediumn install requires 6Gi allocatable cluster memory
+              uri: https://github.com/jfrog/charts/blob/master/stable/artifactory/values-medium.yaml
+          - warn:
+              when: "sum(memoryAllocatable) < 10Gi"
+              message: A mediumn install recommends 10Gi allocatable cluster memory
+              uri: https://github.com/jfrog/charts/blob/master/stable/artifactory/values-medium.yaml
+          - pass:
+              message: Cluster has at least 10Gi of allocatable memory
+    - nodeResources:
+        checkName: Cluster CPUs
+        outcomes:
+          - fail:
+              when: "sum(cpuAllocatable) < 4"
+              message: A mediumn install requires 4 allocatable cluster CPUs
+              uri: https://github.com/jfrog/charts/blob/master/stable/artifactory/values-medium.yaml
+          - warn:
+              when: "sum(cpuAllocatable) < 8"
+              message: A mediumn install recommends 8 allocatable cluster CPUs
+              uri: https://github.com/jfrog/charts/blob/master/stable/artifactory/values-medium.yaml
+          - pass:
+              message: Cluster has 8 or more allocatable CPU cores
