@@ -1,0 +1,50 @@
+apiVersion: troubleshoot.replicated.com/v1beta1
+kind: SupportBundle
+metadata:
+  name: artifactory
+spec:
+  collectors:
+    cluster-info: {}
+    cluster-resources: {}
+    logs:
+      selector:
+        - app=artifactory
+      namespace: artifactory-oss
+      name: artifactory-oss
+  analyzers:
+    - nodeResources:
+        checkName: Cluster Memory
+        outcomes:
+          - warn:
+              when: "sum(memoryAllocatable) < 1Gi"
+              message: Allocatable memory in cluster is less than 1Gi
+              uri: https://github.com/jfrog/charts/blob/master/stable/artifactory/values-medium.yaml
+          - pass:
+              message: Cluster has at least 1Gi of allocatable memory
+    - nodeResources:
+        checkName: Cluster CPUs
+        outcomes:
+          - warn:
+              when: "sum(cpuAllocatable) < 1000m"
+              message: Allocatable cpus in cluster is less than 1000m
+              uri: https://github.com/jfrog/charts/blob/master/stable/artifactory/values-medium.yaml
+          - pass:
+              message: Cluster has at least 1000m of allocatable cpu
+    - statefulsetStatus:
+        name: artifactory-oss
+        namespace: artifactory-oss
+        outcomes:
+          - fail:
+              when: "< 1"
+              message: The artifactory statefulset does not have any ready replicas.
+          - pass:
+              message: The artifactory statefulset is ready.
+    - deploymentStatus:
+        name: artifactory-oss-artifactory-nginx
+        namespace: artifactory-oss
+        outcomes:
+          - fail:
+              when: "< 1"
+              message: The artifactory-nginx deployment does not have any ready replicas.
+          - pass:
+              message: The artifactory-nginx deployment is ready.

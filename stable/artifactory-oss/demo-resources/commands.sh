@@ -22,7 +22,7 @@ kubectl port-forward -n external-postgres svc/postgres 5432:5432
 psql -h localhost -p 5432 -U yalla_user --password \postgres
 select VERSION();
 
-open https://github.com/dexhorthy/jfrog-charts/tree/add-troubleshoot/stable/artifactory
+open https://github.com/dexhorthy/jfrog-charts/tree/add-troubleshoot/stable/artifactory-oss
 open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/artifactory/values-medium.yaml
 open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/artifactory/values-large.yaml
 open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/artifactory-oss/preflight-medium.yaml
@@ -30,6 +30,7 @@ open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/arti
 
 kubectl preflight https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/preflight-medium.yaml
 
+open https://troubleshoot.sh/docs/collect/
 gcloud container clusters resize dex-yalla-cluster --num-nodes=4
 kubectl get node
 
@@ -41,17 +42,29 @@ kubectl preflight --format=json --interactive=false https://raw.githubuserconten
 cat demo-resources/values-1.yaml
 
 kubectl create namespace artifactory-oss
-helm install --upgrade artifactory-oss . -f demo-resources/values-1.yaml --namespace artifactory-oss
+helm upgrade --install artifactory-oss . -f demo-resources/values-1.yaml --namespace artifactory-oss
 
 kubectl get pod
 kubectl -n artifactory-oss get pod
 kubectl logs artifactory-oss-0
 kubectl -n artifactory-oss logs artifactory-oss-0
+kubectl -n artifactory-oss describe pod artifactory-oss-0
+kubectl -n artifactory-oss logs artifactory-oss-0 -c delete-db-properties
+kubectl -n artifactory-oss logs artifactory-oss-0 -c migration-artifactory
+kubectl -n artifactory-oss logs artifactory-oss-0
 kubectl -n artifactory-oss logs artifactory-oss-0 | grep ' FATAL: password authentication failed for user'
 
-helm install --upgrade artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
+helm upgrade --install artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
+kubectl -n artifactory-oss get pod
 kubectl -n artifactory-oss delete pod artifactory-oss-0
 
+# open service, log in, etc
+
+helm upgrade --install artifactory-oss . -f demo-resources/values-1.yaml --namespace artifactory-oss
+kubectl -n artifactory-oss get pod
+kubectl -n artifactory-oss delete pod artifactory-oss-0
+
+kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
 
 # support bundle
 # statefulset not ready
