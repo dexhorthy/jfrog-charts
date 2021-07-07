@@ -18,5 +18,5 @@ artifactory:
     url: jdbc:postgresql://postgres.external-postgres.svc.cluster.local:5432/yalladb
     ## If you would like this chart to create the secret containing the db
     ## password, use these values
-    user: yalla-user
-    password: howdy-yalla
+    user: yalla_user
+    password: howdy_yalla
