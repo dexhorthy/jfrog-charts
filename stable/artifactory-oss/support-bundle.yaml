@@ -61,8 +61,8 @@ spec:
         regex: 'FATAL: password authentication failed for user'
         outcomes:
           - pass:
-              when: false
+              when: "false"
               message: "Database successfully initialized"
           - fail:
-              when: true
+              when: "true"
               message: "Problem with database connection details"
