@@ -52,7 +52,7 @@ kubectl -n artifactory-oss describe pod artifactory-oss-0
 kubectl -n artifactory-oss logs artifactory-oss-0 -c delete-db-properties
 kubectl -n artifactory-oss logs artifactory-oss-0 -c migration-artifactory
 kubectl -n artifactory-oss logs artifactory-oss-0
-kubectl -n artifactory-oss logs artifactory-oss-0 | grep ' FATAL: password authentication failed for user'
+kubectl -n artifactory-oss logs artifactory-oss-0 | grep 'FATAL: password authentication failed for user'
 
 helm upgrade --install artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
 kubectl -n artifactory-oss get pod

@@ -48,3 +48,21 @@ spec:
               message: The artifactory-nginx deployment does not have any ready replicas.
           - pass:
               message: The artifactory-nginx deployment is ready.
+    - textAnalyze:
+        fileName: artifactory-oss/**/*
+        regex: 'Post-DB initialization manager initialized'
+        outcomes:
+          - pass:
+              message: "DB initialized successfully"
+          - fail:
+              message: "DB not yet initialized"
+    - textAnalyze:
+        fileName: artifactory-oss/**/*
+        regex: 'FATAL: password authentication failed for user'
+        outcomes:
+          - pass:
+              when: false
+              message: "Database successfully initialized"
+          - fail:
+              when: true
+              message: "Problem with database connection details"
