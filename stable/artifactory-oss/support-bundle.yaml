@@ -4,13 +4,11 @@ metadata:
   name: artifactory
 spec:
   collectors:
-    cluster-info: {}
-    cluster-resources: {}
-    logs:
-      selector:
-        - app=artifactory
-      namespace: artifactory-oss
-      name: artifactory-oss
+    - logs:
+        selector:
+          - app=artifactory
+        namespace: artifactory-oss
+        name: artifactory-oss
   analyzers:
     - nodeResources:
         checkName: Cluster Memory
@@ -31,6 +29,7 @@ spec:
           - pass:
               message: Cluster has at least 1000m of allocatable cpu
     - statefulsetStatus:
+        checkName: Artifactory Status
         name: artifactory-oss
         namespace: artifactory-oss
         outcomes:
@@ -40,6 +39,7 @@ spec:
           - pass:
               message: The artifactory statefulset is ready.
     - deploymentStatus:
+        checkName: Nginx Status
         name: artifactory-oss-artifactory-nginx
         namespace: artifactory-oss
         outcomes:
@@ -49,20 +49,26 @@ spec:
           - pass:
               message: The artifactory-nginx deployment is ready.
     - textAnalyze:
-        fileName: artifactory-oss/**/*
-        regex: 'Post-DB initialization manager initialized'
+        checkName: Database Connection
+        fileName: artifactory-oss/artifactory-oss-0/artifactory.log
+        regex: 'Could not initialize database: The connection attempt failed.'
         outcomes:
           - pass:
-              message: "DB initialized successfully"
+              when: "false"
+              message: "Database connection successful"
           - fail:
-              message: "DB not yet initialized"
+              when: "true"
+              message: "Artifactory pod unable to connect to database"
+              uri: https://github.com/dexhorthy/jfrog-charts/tree/add-troubleshoot/stable/artifactory-oss#ingress-and-tls
     - textAnalyze:
-        fileName: artifactory-oss/**/*
+        checkName: Database Authentication
+        fileName: artifactory-oss/artifactory-oss-0/artifactory.log
         regex: 'FATAL: password authentication failed for user'
         outcomes:
           - pass:
               when: "false"
-              message: "Database successfully initialized"
+              message: "Database credentials okay"
           - fail:
               when: "true"
-              message: "Problem with database connection details"
+              message: "Problem with artifactory database credentials"
+              uri: https://github.com/dexhorthy/jfrog-charts/tree/add-troubleshoot/stable/artifactory-oss#ingress-and-tls

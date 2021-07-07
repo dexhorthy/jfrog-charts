@@ -63,14 +63,16 @@ kubectl -n artifactory-oss delete pod artifactory-oss-0
 helm upgrade --install artifactory-oss . -f demo-resources/values-1.yaml --namespace artifactory-oss
 kubectl -n artifactory-oss get pod
 kubectl -n artifactory-oss delete pod artifactory-oss-0
+kubectl -n artifactory-oss get pod --watch
 
 kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
 
-# support bundle
-# statefulset not ready
-# postgres-url log analyzer
+helm upgrade --install artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
+kubectl -n artifactory-oss get pod
+kubectl -n artifactory-oss delete pod artifactory-oss-0
+kubectl -n artifactory-oss get pod --watch
 
-
+kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
 
 #### teardown ####
 
