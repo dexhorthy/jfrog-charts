@@ -13,11 +13,7 @@ kubectl get node
 
 cat demo-resources/external-postgres.yaml
 
-kubectl apply -f demo-resources/external-postgres.yaml
-
-watch -d kubectl get pod -n external-postgres
-
-kubectl port-forward -n external-postgres svc/postgres 5432:5432
+kubectl get pod -n external-postgres
 
 psql -h localhost -p 5432 -U yalla_user --password \postgres
 select VERSION();
@@ -27,9 +23,11 @@ open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/arti
 open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/artifactory/values-large.yaml
 open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/artifactory-oss/preflight-medium.yaml
 open https://github.com/dexhorthy/jfrog-charts/blob/add-troubleshoot/stable/artifactory-oss/preflight-large.yaml
+open https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/preflight-medium.yaml
 
 kubectl preflight https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/preflight-medium.yaml
 
+open https://troubleshoot.sh/docs/analyze/node-resources/
 open https://troubleshoot.sh/docs/collect/
 gcloud container clusters resize dex-yalla-cluster --num-nodes=4
 kubectl get node
@@ -48,29 +46,16 @@ kubectl get pod
 kubectl -n artifactory-oss get pod
 kubectl logs artifactory-oss-0
 kubectl -n artifactory-oss logs artifactory-oss-0
-kubectl -n artifactory-oss describe pod artifactory-oss-0
-kubectl -n artifactory-oss logs artifactory-oss-0 -c delete-db-properties
-kubectl -n artifactory-oss logs artifactory-oss-0 -c migration-artifactory
-kubectl -n artifactory-oss logs artifactory-oss-0
+
 kubectl -n artifactory-oss logs artifactory-oss-0 | grep 'FATAL: password authentication failed for user'
-
-helm upgrade --install artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
-kubectl -n artifactory-oss get pod
-kubectl -n artifactory-oss delete pod artifactory-oss-0
-
-# open service, log in, etc
-
-helm upgrade --install artifactory-oss . -f demo-resources/values-1.yaml --namespace artifactory-oss
-kubectl -n artifactory-oss get pod
-kubectl -n artifactory-oss delete pod artifactory-oss-0
-kubectl -n artifactory-oss get pod --watch
 
 kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
 
 helm upgrade --install artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
 kubectl -n artifactory-oss get pod
 kubectl -n artifactory-oss delete pod artifactory-oss-0
-kubectl -n artifactory-oss get pod --watch
+kubectl -n artifactory-oss get pod
+kubectl -n artifactory-oss get svc
 
 kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
 
@@ -79,3 +64,10 @@ kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/
 gcloud container clusters resize dex-yalla-cluster --num-nodes=2
 kubectl delete ns artifactory-oss
 kubectl delete ns external-postgres
+
+kubectl apply -f demo-resources/external-postgres.yaml
+
+kubectl create namespace artifactory-oss
+helm upgrade --install artifactory-oss . -f demo-resources/values-1.yaml --namespace artifactory-oss
+rm -r support-bundle-*
+kubectl port-forward -n external-postgres svc/postgres 5432:5432
