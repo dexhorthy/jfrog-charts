@@ -50,7 +50,9 @@ kubectl -n artifactory-oss logs artifactory-oss-0
 kubectl -n artifactory-oss logs artifactory-oss-0 | grep 'FATAL: password authentication failed for user'
 
 kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
+rm -r support-bundle-*
 
+cat demo-resources/values-2.yaml
 helm upgrade --install artifactory-oss . -f demo-resources/values-2.yaml --namespace artifactory-oss
 kubectl -n artifactory-oss get pod
 kubectl -n artifactory-oss delete pod artifactory-oss-0
@@ -58,6 +60,15 @@ kubectl -n artifactory-oss get pod
 kubectl -n artifactory-oss get svc
 
 kubectl support-bundle https://raw.githubusercontent.com/dexhorthy/jfrog-charts/add-troubleshoot/stable/artifactory-oss/support-bundle.yaml
+tar xvf support-bundle-*
+tree support-bundle-*
+tail -n10 support-bundle-*/artifactory-oss/*/*.log | grep -E 'support-bundle.*|$'
+
+cat support-bundle-*/cluster-resources/statefulsets/artifactory-oss.json
+
+cat support-bundle-*/cluster-resources/statefulsets/artifactory-oss.json | tail -n 20
+
+cat support-bundle-*/cluster-resources/statefulsets/artifactory-oss.json | jq '.[] | .status'
 
 #### teardown ####
 
